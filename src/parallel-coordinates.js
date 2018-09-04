@@ -6,6 +6,10 @@ dc_parcoords.parallelCoords = function(selector, chartGroup) {
 
     var _width = 400, _height = 300;
 
+    _parallelCoords.parcoords = function() {
+        return _parcoords;
+    };
+
     _parallelCoords.render = function() {
         _root = d3.select(selector);
         _root
