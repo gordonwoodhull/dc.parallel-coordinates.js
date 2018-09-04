@@ -138,7 +138,7 @@ module.exports = function (grunt) {
                             'node_modules/jquery/dist/jquery.js',
                             'node_modules/d3/dist/d3.js',
                             'node_modules/dc/dc.js',
-                            'node_modules/parcoord-es/dist/parcoords.js',
+                            'node_modules/parcoord-es/dist/parcoords.standalone.js',
                             'node_modules/crossfilter2/crossfilter.js'
                         ],
                         dest: '<%= conf.web %>/js/'
