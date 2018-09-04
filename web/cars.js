@@ -10,10 +10,16 @@ d3.csv('cars.csv').then(function(data) {
     var economyDim = cf.dimension(d => d['economy (mpg)']);
 
     var par = dc_parcoords.parallelCoords('#parcoords');
+    var blue_to_brown = d3.scaleLinear()
+            .domain([9, 50])
+            .range(["steelblue", "brown"])
+            .interpolate(d3.interpolateLab);
     par
         .width(600)
         .height(300)
-        .dimensions([economyDim]);
+        .dimensions([economyDim])
+        .colorAccessor(d => d['economy (mpg)'])
+        .colors(blue_to_brown);
 
     var yearDim = cf.dimension(d => d.year),
         yearWeightGroup = yearDim.group().reduceSum(d => d['weight (lb)']);
