@@ -8,7 +8,10 @@ dc_parcoords.parallelCoords = function(selector, chartGroup) {
 
     _parallelCoords.render = function() {
         _root = d3.select(selector);
-        _root.classed('parcoords', true);
+        _root
+            .style('height', _height + 'px')
+            .style('width', _width + 'px')
+            .classed('parcoords', true);
         _parcoords = ParCoords()(selector);
         _parcoords
             .width(_width)
