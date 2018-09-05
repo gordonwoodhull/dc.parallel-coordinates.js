@@ -5,7 +5,8 @@ dc_parcoords.parallelCoords = function(selector, chartGroup) {
         _dimensions; // array of crossfilter dimensions
 
     var _width = 400, _height = 300,
-        _colorAccessor, _colorScale;
+        _colorAccessor, _colorScale,
+        _hideAxis;
 
     _chart.parcoords = function() {
         if(!_parcoords)
@@ -27,6 +28,8 @@ dc_parcoords.parallelCoords = function(selector, chartGroup) {
         parcoords
             .width(_width)
             .height(_height);
+        if(_chart.hideAxis())
+            parcoords.hideAxis(_chart.hideAxis());
         if(_colorAccessor) {
             if(_colorScale)
                 parcoords.color(function(d) {
@@ -80,6 +83,13 @@ dc_parcoords.parallelCoords = function(selector, chartGroup) {
         if(!arguments.length)
             return _colorScale;
         _colorScale = _;
+        return this;
+    };
+
+    _chart.hideAxis = function(_) {
+        if(!arguments.length)
+            return _hideAxis;
+        _hideAxis = _;
         return this;
     };
 

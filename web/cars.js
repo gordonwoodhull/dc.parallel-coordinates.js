@@ -19,7 +19,8 @@ d3.csv('cars.csv').then(function(data) {
         .height(300)
         .dimensions([economyDim])
         .colorAccessor(d => d['economy (mpg)'])
-        .colors(blue_to_brown);
+        .colors(blue_to_brown)
+        .hideAxis(['name']);
 
     var yearDim = cf.dimension(d => d.year),
         yearWeightGroup = yearDim.group().reduceSum(d => d['weight (lb)']);
