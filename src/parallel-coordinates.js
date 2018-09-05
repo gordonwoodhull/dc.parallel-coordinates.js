@@ -8,6 +8,12 @@ dc_parcoords.parallelCoords = function(selector, chartGroup) {
         _colorAccessor, _colorScale;
 
     _parallelCoords.parcoords = function() {
+        if(!_parcoords)
+            _parcoords = ParCoords()(selector);
+        if(_dimensions && _dimensions.length) {
+            _parcoords
+                .data(_dimensions[0].top(Infinity));
+        }
         return _parcoords;
     };
 
@@ -17,17 +23,17 @@ dc_parcoords.parallelCoords = function(selector, chartGroup) {
             .style('height', _height + 'px')
             .style('width', _width + 'px')
             .classed('parcoords', true);
-        _parcoords = ParCoords()(selector);
-        _parcoords
+        var parcoords = _parallelCoords.parcoords();
+        parcoords
             .width(_width)
             .height(_height);
         if(_colorAccessor) {
             if(_colorScale)
-                _parcoords.color(function(d) {
+                parcoords.color(function(d) {
                     return _colorScale(_colorAccessor(d));
                 });
             else
-                _parcoords.color(function(d) {
+                parcoords.color(function(d) {
                     return _colorAccessor(d);
                 });
         }
