@@ -63,13 +63,18 @@ dc_parcoords.parallelCoords = function(selector, chartGroup) {
         return _chart.redraw();
     };
 
+    var foo;
     _chart.redraw = function() {
         if(NO) return this;
         _parcoords
             .data(_dimension.top(Infinity))
             .render();
-         _parcoords.createAxes();
-       return this;
+        if(!foo)
+            _parcoords.createAxes();
+        else
+            _parcoords.updateAxes();
+        foo = true;
+        return this;
     };
 
     _chart.dimension = function(_) {
