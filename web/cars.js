@@ -24,6 +24,8 @@ d3.csv('cars.csv').then(function(data) {
 
     var yearDim = cf.dimension(d => d.year),
         yearWeightGroup = yearDim.group().reduceSum(d => d['weight (lb)']);
+    par.parcoords().margin({top:20, left:50, right:20, bottom: 20});
+
 
     var pie = dc.pieChart('#pie');
     pie
