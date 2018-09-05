@@ -32,7 +32,36 @@ d3.csv('cars.csv').then(function(data) {
         .width(250)
         .height(250)
         .dimension(yearDim)
-        .group(yearWeightGroup);
+        .group(yearWeightGroup)
+        .minAngleForLabel(0.01);
+
+    var powerDim = cf.dimension(d => d['power (hp)']),
+        powerAccelGroup = powerDim.group(p => Math.floor(p/25)*25).reduce(
+            function(p, v) { // add
+                ++p.n;
+                p.tot += v['0-60 mph (s)'];
+                return p;
+            },
+            function(p, v) { // remove
+                --p.n;
+                p.tot -= v['0-60 mph (s)'];
+                return p;
+            },
+            function() {
+                return {n: 0, tot: 0};
+            }
+        );
+    var line = dc.lineChart('#line');
+    line
+        .width(400)
+        .height(200)
+        .xAxisLabel('power (hp)')
+        .yAxisLabel('avg 0-60 mph (s)')
+        .dimension(powerDim)
+        .group(powerAccelGroup)
+        .valueAccessor(kv => kv.value.n && kv.value.tot/kv.value.n)
+        .x(d3.scaleLinear()).elasticX(true)
+        .elasticY(true);
 
     dc.renderAll();
 });
