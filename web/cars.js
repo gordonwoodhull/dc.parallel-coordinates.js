@@ -7,7 +7,8 @@ d3.csv('cars.csv').then(function(data) {
     });
 
     var cf = crossfilter(data);
-    var economyDim = cf.dimension(d => d['economy (mpg)']);
+    var car_key = d => d.name + ' ' + d.year;
+    var nameDim = cf.dimension(car_key);
 
     var par = dc_parcoords.parallelCoords('#parcoords');
     var blue_to_brown = d3.scaleLinear()
@@ -17,15 +18,16 @@ d3.csv('cars.csv').then(function(data) {
     par
         .width(600)
         .height(300)
-        .dimensions([economyDim])
+        .dimension(nameDim)
+        .keyAccessor(car_key)
         .colorAccessor(d => d['economy (mpg)'])
         .colors(blue_to_brown)
         .hideAxis(['name']);
 
-    var yearDim = cf.dimension(d => d.year),
-        yearWeightGroup = yearDim.group().reduceSum(d => d['weight (lb)']);
     par.parcoords().margin({top:20, left:50, right:20, bottom: 20});
 
+    var yearDim = cf.dimension(d => d.year),
+        yearWeightGroup = yearDim.group().reduceSum(d => d['weight (lb)']);
 
     var pie = dc.pieChart('#pie');
     pie
@@ -64,4 +66,7 @@ d3.csv('cars.csv').then(function(data) {
         .elasticY(true);
 
     dc.renderAll();
+
+    par.parcoords()
+        .brushMode('1D-axes');
 });

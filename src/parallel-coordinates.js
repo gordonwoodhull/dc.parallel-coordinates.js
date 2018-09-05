@@ -2,18 +2,38 @@ dc_parcoords.parallelCoords = function(selector, chartGroup) {
     var _chart = {}, // this object
         _parcoords, // syntagmatic parallel-coordinates object
         _root, // parent div
-        _dimensions; // array of crossfilter dimensions
+        _dimension; // array of crossfilter dimensions
 
     var _width = 400, _height = 300,
+        _keyAccessor,
         _colorAccessor, _colorScale,
         _hideAxis;
 
+    var NO;
+
     _chart.parcoords = function() {
-        if(!_parcoords)
+        if(!_parcoords) {
             _parcoords = ParCoords()(selector);
-        if(_dimensions && _dimensions.length) {
+            _parcoords.on('brush', function(d) {
+                if(_dimension && _keyAccessor) {
+                    if(!d || !d.length)
+                        _dimension.filter(null);
+                    else {
+                        var keys = d.map(_keyAccessor);
+                        _dimension.filter(function(k2) {
+                            return keys.indexOf(k2) !== -1;
+                        });
+                        NO=true;
+                        dc.redrawAll(chartGroup);
+                        NO=false;
+                    }
+                }
+                console.log(d);
+            });
+        }
+        if(_dimension) {
             _parcoords
-                .data(_dimensions[0].top(Infinity));
+                .data(_dimension.top(Infinity));
         }
         return _parcoords;
     };
@@ -44,17 +64,18 @@ dc_parcoords.parallelCoords = function(selector, chartGroup) {
     };
 
     _chart.redraw = function() {
+        if(NO) return this;
         _parcoords
-            .data(_dimensions[0].top(Infinity))
+            .data(_dimension.top(Infinity))
             .render();
          _parcoords.createAxes();
        return this;
     };
 
-    _chart.dimensions = function(_) {
+    _chart.dimension = function(_) {
         if(!arguments.length)
-            return _dimensions;
-        _dimensions = _;
+            return _dimension;
+        _dimension = _;
         return this;
     };
 
@@ -69,6 +90,13 @@ dc_parcoords.parallelCoords = function(selector, chartGroup) {
         if(!arguments.length)
             return _height;
         _height = _;
+        return this;
+    };
+
+    _chart.keyAccessor = function(_) {
+        if(!arguments.length)
+            return _keyAccessor;
+        _keyAccessor = _;
         return this;
     };
 
